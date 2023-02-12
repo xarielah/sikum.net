@@ -1,0 +1,43 @@
+import { ConfigFactory } from '@nestjs/config';
+
+export const configFactory: ConfigFactory<{ config: IConfiguration }> = () => {
+  return {
+    config: {
+      app: {
+        port: +process.env.APP_PORT || 3000,
+      },
+      front: {
+        domain: process.env.FRONT_DOMAIN,
+      },
+      session: {
+        secret: process.env.SESSION_SECRET,
+      },
+      novu: {
+        apiKey: process.env.NOVU_API_KEY,
+      },
+    },
+  };
+};
+
+export interface AppConfig {
+  port: number;
+}
+
+export interface FrontConfig {
+  domain: string;
+}
+
+export interface SessionConfig {
+  secret: string;
+}
+
+export interface NovuConfig {
+  apiKey: string;
+}
+
+export interface IConfiguration {
+  app: AppConfig;
+  front: FrontConfig;
+  session: SessionConfig;
+  novu: NovuConfig;
+}

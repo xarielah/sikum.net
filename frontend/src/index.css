@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+  font-family: "Heebo", sans-serif;
+}
+
+.app-container {
+  min-height: calc(100vh - 272px - 144px);
+}

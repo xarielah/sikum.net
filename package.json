@@ -1,0 +1,13 @@
+{
+  "name": "sikum-net",
+  "version": "1.0.0",
+  "description": "An Israeli open-source academic website to serve as centralized source for students to post and consume acadmic texts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:backend": "cd ./backend && npm run start:dev",
+    "start:frontend": "cd ./frontend && npm run dev"
+  },
+  "author": "Ariel<xarielah@gmail.com>",
+  "license": "ISC"
+}
