@@ -1,8 +1,9 @@
 import { ConfigFactory } from '@nestjs/config';
 
 export const configFactory: ConfigFactory<{ config: IConfiguration }> = () => {
+
   console.log("Current CORS front domain: ", process.env.FRONT_DOMAIN);
-  
+
   return {
     config: {
       app: {
