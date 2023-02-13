@@ -4,14 +4,19 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { AppConfigService } from './config/config.service';
 // import { AppConfigService } from './config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
+  const frontDomain = app.get(AppConfigService).getConfig().front.domain;
+
   app.use(
     session({
       name: 's.id',
-      secret: '123123', //! Change this to config file's secret
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -25,7 +30,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:5173', //! Change this to config's front url
+    origin: frontDomain,
     credentials: true,
   });
   app.use(passport.initialize());

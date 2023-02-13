@@ -7,7 +7,7 @@ export const configFactory: ConfigFactory<{ config: IConfiguration }> = () => {
         port: +process.env.APP_PORT || 3000,
       },
       front: {
-        domain: process.env.FRONT_DOMAIN,
+        domain: process.env.FRONT_DOMAIN ?? 'http://localhost:5173',
       },
       session: {
         secret: process.env.SESSION_SECRET,
