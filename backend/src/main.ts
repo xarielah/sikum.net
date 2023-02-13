@@ -12,6 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
   const frontDomain = app.get(AppConfigService).getConfig().front.domain;
+  const port = app.get(AppConfigService).getConfig().app.port;
 
   app.setGlobalPrefix('api');
 
@@ -23,8 +24,9 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 360000, // 1hour in seconds
-        sameSite: 'none',
-        secure: true,
+        sameSite: process.env.NODE_ENV !== 'production' ? 'lax' : 'none',
+        secure: process.env.NODE_ENV !== 'production' ? false : true,
+        httpOnly: true,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms
@@ -39,6 +41,6 @@ async function bootstrap() {
   });
   app.use(passport.initialize());
   app.use(passport.session());
-  await app.listen(3000);
+  await app.listen(port);
 }
 bootstrap();
