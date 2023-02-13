@@ -32,7 +32,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: frontDomain,
+    origin: [frontDomain, `${frontDomain}/`],
     credentials: true,
   });
   app.use(passport.initialize());
