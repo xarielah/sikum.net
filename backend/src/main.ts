@@ -13,6 +13,8 @@ async function bootstrap() {
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
   const frontDomain = app.get(AppConfigService).getConfig().front.domain;
 
+  app.setGlobalPrefix('api');
+
   app.use(
     session({
       name: 's.id',
