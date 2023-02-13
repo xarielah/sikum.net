@@ -1,6 +1,10 @@
 import { ConfigFactory } from '@nestjs/config';
 
 export const configFactory: ConfigFactory<{ config: IConfiguration }> = () => {
+  console.log(
+    '🚀 ~ file: config.factory.ts:12 ~ process.env.FRONT_DOMAIN',
+    process.env.FRONT_DOMAIN,
+  );
   return {
     config: {
       app: {
