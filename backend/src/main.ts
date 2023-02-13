@@ -24,6 +24,7 @@ async function bootstrap() {
       cookie: {
         maxAge: 360000, // 1hour in seconds
         sameSite: 'none',
+        secure: true,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms
@@ -33,7 +34,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: frontDomain,
+    origin: [frontDomain, `${frontDomain}/`],
     credentials: true,
   });
   app.use(passport.initialize());
