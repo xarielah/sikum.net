@@ -26,6 +26,11 @@ async function bootstrap() {
         maxAge: 360000, // 1hour in seconds
         sameSite: process.env.NODE_ENV !== 'production' ? 'lax' : 'none',
         secure: process.env.NODE_ENV !== 'production' ? false : true,
+        path: '/',
+        domain:
+          process.env.NODE_ENV !== 'production'
+            ? 'http://localhost:5173'
+            : frontDomain,
         httpOnly: true,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
