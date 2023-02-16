@@ -9,7 +9,9 @@ import { AppConfigService } from './config/config.service';
 // import { AppConfigService } from './config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
   const frontDomain = app.get(AppConfigService).getConfig().front.domain;
   const port = app.get(AppConfigService).getConfig().app.port;
