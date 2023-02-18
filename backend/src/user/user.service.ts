@@ -14,13 +14,14 @@ export class UserService {
   async getUser(
     uniqueKey: string,
     type?: 'id',
-  ): Promise<SessionPayload | null> {
+  ): Promise<UserSessionPayload | null> {
     if (type === 'id') {
       const foundUniqueUser = await this.prisma.user.findUnique({
         where: { id: uniqueKey },
         select: {
           username: true,
           email: true,
+          firstName: true,
           role: true,
           id: true,
           verified: true,
@@ -41,11 +42,16 @@ export class UserService {
   }
 }
 
-export type SessionPayload = {
+type UserSessionPayload = {
   username: string;
   email: string;
+  firstName?: string;
   role: string;
   id: string;
   verified: boolean;
   password?: string;
 };
+
+export type SessionPayload = {
+  name?: string;
+} & UserSessionPayload;

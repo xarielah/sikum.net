@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Post, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { TopicService } from 'src/topic/topic.service';
 import { UserService } from 'src/user/user.service';
 import { PostDto } from './dto/post.dto';
 
@@ -13,6 +14,7 @@ export class PostService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userService: UserService,
+    private readonly topicService: TopicService,
   ) {}
 
   /**
@@ -21,7 +23,28 @@ export class PostService {
    * @returns post
    */
   async getPostById(id: string, user: any): Promise<Post> {
-    const foundPost = await this.prisma.post.findUnique({ where: { id: id } });
+    const foundPost = await this.prisma.post.findUnique({
+      where: { id: id },
+      select: {
+        createdAt: true,
+        updatedAt: true,
+        title: true,
+        id: true,
+        description: true,
+        fileUrl: true,
+        ownerId: true,
+        owner: {
+          select: {
+            username: true,
+          },
+        },
+        topic: {
+          select: {
+            label: true,
+          },
+        },
+      },
+    });
     const foundUser = await this.userService.getUser(user.id, 'id');
 
     if (!foundUser) throw new ForbiddenException();
@@ -30,7 +53,7 @@ export class PostService {
     if (foundPost.ownerId !== user.id && foundUser.role !== 'ADMIN')
       throw new ForbiddenException();
 
-    return foundPost;
+    return foundPost as unknown as Post;
   }
 
   /**
@@ -39,8 +62,10 @@ export class PostService {
    */
   async createNewPost(postDto: PostDto, user: User): Promise<Post> {
     const foundUser = await this.userService.getUser(user.username);
+    const foundTopic = await this.topicService.getTopicById(postDto.topicId);
+
     return this.prisma.post.create({
-      data: { ...postDto, ownerId: foundUser.id },
+      data: { ...postDto, ownerId: foundUser.id, topicId: foundTopic.id },
     });
   }
 
@@ -81,6 +106,12 @@ export class PostService {
         fileUrl: true,
         createdAt: true,
         ownerId: true,
+        topic: {
+          select: {
+            label: true,
+            id: true,
+          },
+        },
         owner: {
           select: {
             username: true,

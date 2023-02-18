@@ -3,12 +3,10 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
-  Param,
   Post,
   Request,
   Session,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { Request as RequestType } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -19,15 +17,10 @@ import { AuthenticatedGuard } from './strategies/local.strategy';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
-  async handleRegistration(
-    @Body(ValidationPipe) registerDto: RegisterDto,
-  ): Promise<void> {
+  async handleRegistration(@Body() registerDto: RegisterDto): Promise<void> {
     return this.authService.handleRegister(registerDto);
   }
 
@@ -41,9 +34,7 @@ export class AuthController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('/session')
-  async handleSessionDeserialize(
-    @Session() session: any,
-  ): Promise<{ username: string; email: string }> {
+  async handleSessionDeserialize(@Session() session: any): Promise<any> {
     return session.passport.user;
   }
 

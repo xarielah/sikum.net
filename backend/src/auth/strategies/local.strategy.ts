@@ -5,6 +5,7 @@ import { AuthService } from '../auth.service';
 import { CanActivate } from '@nestjs/common';
 import { ExecutionContext } from '@nestjs/common/interfaces';
 import { Request } from 'express';
+import { SessionPayload } from 'src/user/user.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -12,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super();
   }
 
-  async validate(username: string, password: string) {
+  async validate(username: string, password: string): Promise<SessionPayload> {
     const user = await this.authService.handleLogin({ username, password });
     if (!user)
       throw new UnauthorizedException(
@@ -21,6 +22,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     return {
       username: user.username,
+      name: user.name,
       email: user.email,
       role: user.role.toString(),
       id: user.id,

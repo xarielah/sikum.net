@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import PostPreview from "../../components/page-components/posts/post-preview";
 import RippleLoading from "../../components/ui-elements/loading/ripple-loading";
 import { axiosClient } from "../../service/axios/axiosClient";
+import { IPost } from "./show-post-page/show-post";
 
 const AllPosts = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<IPost[]>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -32,7 +33,7 @@ const AllPosts = () => {
             בהצלחה! 🚀
           </p>
         </div>
-        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-flow-row gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {data.map((post, i) => (
             <PostPreview key={i} post={post} />
           ))}

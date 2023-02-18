@@ -11,8 +11,10 @@ const AuthState = () => {
       <span className="font-bold text-sm lg:text-lg text-gray-300">
         {getLoggedUser.username ? (
           <span>
-            ברוכים הבאים,{" "}
-            <span className="text-white">{getLoggedUser.username}</span>
+            שלום,{" "}
+            <span className="text-white">
+              {getLoggedUser.name ?? getLoggedUser.username}
+            </span>
           </span>
         ) : (
           "אתם רשומים?"
@@ -21,7 +23,7 @@ const AuthState = () => {
       {getLoggedUser.username ? (
         <Button
           onClick={doLogout}
-          className="bg-transparent text-red-500 font-bold hover:bg-transparent hover:underline"
+          className="bg-transparent shadow-none text-red-500 font-bold hover:bg-transparent hover:underline"
         >
           התנתקות
         </Button>

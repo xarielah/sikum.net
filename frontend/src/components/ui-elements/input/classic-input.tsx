@@ -12,9 +12,7 @@ const ClassicInput = React.forwardRef(
       <input
         ref={ref}
         {...restProps}
-        className={`p-2 w-[40ch] border-slate-300 focus:outline-cyan-400 border-[1px] rounded-lg text-sm ${
-          className ?? ""
-        }`}
+        className={`classic-input ${className ?? ""}`}
       />
     );
   }

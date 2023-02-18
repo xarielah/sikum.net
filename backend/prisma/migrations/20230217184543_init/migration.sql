@@ -5,16 +5,15 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "firstName" TEXT,
-    "lastUpdated" TIMESTAMP(3),
     "displayName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "rule" "Role" NOT NULL DEFAULT 'USER',
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "verified" BOOLEAN NOT NULL DEFAULT false,
     "verificationToken" TEXT,
-    "instituteId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -23,7 +22,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "lastUpdated" TIMESTAMP(3),
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "fileUrl" TEXT,
@@ -38,7 +37,7 @@ CREATE TABLE "Post" (
 CREATE TABLE "Institute" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "lastUpdated" TIMESTAMP(3),
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "logoUrl" TEXT,
 
@@ -48,7 +47,10 @@ CREATE TABLE "Institute" (
 -- CreateTable
 CREATE TABLE "Topic" (
     "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "label" TEXT NOT NULL,
+    "order" TEXT NOT NULL,
 
     CONSTRAINT "Topic_pkey" PRIMARY KEY ("id")
 );
@@ -71,9 +73,6 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_sid_key" ON "Session"("sid");
-
--- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_instituteId_fkey" FOREIGN KEY ("instituteId") REFERENCES "Institute"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

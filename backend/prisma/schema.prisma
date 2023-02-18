@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -17,16 +17,16 @@ enum Role {
 }
 
 model User {
-  id                String    @id @default(uuid())
-  createdAt         DateTime  @default(now())
-  updatedAt       DateTime @updatedAt
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   firstName         String?
   displayName       String
-  email             String    @unique()
-  username          String    @unique()
+  email             String   @unique()
+  username          String   @unique()
   password          String
-  role              Role      @default(USER)
-  verified          Boolean   @default(false)
+  role              Role     @default(USER)
+  verified          Boolean  @default(false)
   verificationToken String?
   posts             Post[]
   // institute         Institute @relation(fields: [instituteId], references: [id])
@@ -34,34 +34,34 @@ model User {
 }
 
 model Post {
-  id          String    @id @default(uuid())
-  createdAt         DateTime  @default(now())
-  updatedAt       DateTime @updatedAt
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   title       String
   description String
   fileUrl     String?
   tags        String[]
-  owner       User      @relation(fields: [ownerId], references: [id])
+  owner       User     @relation(fields: [ownerId], references: [id])
   ownerId     String
   topicId     String
-  topic       Topic     @relation(fields: [topicId], references: [id])
+  topic       Topic    @relation(fields: [topicId], references: [id])
 }
 
 model Institute {
-  id          String    @id @default(uuid())
-  createdAt         DateTime  @default(now())
-  updatedAt       DateTime @updatedAt
-  name        String
-  logoUrl     String?
-  // users       User[]
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  logoUrl   String?
 }
 
 model Topic {
-  id          String @id @default(uuid())
-    createdAt         DateTime  @default(now())
-  updatedAt       DateTime @updatedAt
-  label       String
-  posts       Post[]
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  label     String
+  order     Int      @default(autoincrement())
+  posts     Post[]
 }
 
 model Session {

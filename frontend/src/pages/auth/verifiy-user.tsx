@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import CannotVerifyUser from "../../components/page-components/auth/cannot-verify-user";
+import UserVerifiedSuccessfully from "../../components/page-components/auth/user-verified-successfully";
 import RippleLoading from "../../components/ui-elements/loading/ripple-loading";
 import { axiosClient } from "../../service/axios/axiosClient";
 import { parseVerifyCodeToMessage } from "../../utils/auth/verify-error-code-parser";
@@ -33,7 +34,7 @@ const VerifyUser = () => {
 
   if (loading) return <RippleLoading />;
   else if (errorMessage) return <CannotVerifyUser reason={errorMessage} />;
-  else return <section>שדג</section>;
+  else return <UserVerifiedSuccessfully />;
 };
 
 export default VerifyUser;
