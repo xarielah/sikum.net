@@ -25,7 +25,9 @@ export class TopicService {
    * @returns topic data
    */
   async createNewTopic(topicDto: TopicDto): Promise<Topic> {
-    return this.prisma.topic.create({ data: topicDto });
+    return this.prisma.topic.create({
+      data: topicDto,
+    });
   }
 
   /**
@@ -36,4 +38,22 @@ export class TopicService {
     const foundTopic = await this.getTopicById(id);
     this.prisma.topic.delete({ where: { id: foundTopic.id } });
   }
+
+  /**
+   * Get all topics available.
+   * @returns array of topics
+   */
+  async getAllTopics(): Promise<SelectedTopicFields[]> {
+    return this.prisma.topic.findMany({
+      select: {
+        id: true,
+        label: true,
+      },
+    });
+  }
 }
+
+export type SelectedTopicFields = {
+  id: string;
+  label: string;
+};

@@ -12,6 +12,7 @@ import Home from "./pages/home";
 import AllPosts from "./pages/posts/all-posts";
 import NewPost from "./pages/posts/new-post";
 import SearchPosts from "./pages/posts/search/search-posts";
+import HandleShowPage from "./pages/posts/show-post-page/handle-show-page";
 import { store } from "./redux/store";
 
 function App() {
@@ -52,6 +53,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <NewPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/post/:id"
+            element={
+              <ProtectedRoute>
+                <HandleShowPage />
               </ProtectedRoute>
             }
           />

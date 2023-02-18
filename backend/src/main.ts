@@ -6,15 +6,18 @@ import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfigService } from './config/config.service';
-// import { AppConfigService } from './config/config.service';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
   const frontDomain = app.get(AppConfigService).getConfig().front.domain;
+  const backendDomain = app.get(AppConfigService).getConfig().back.domain;
   const port = app.get(AppConfigService).getConfig().app.port;
 
   app.setGlobalPrefix('api');
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.use(
     session({
@@ -24,14 +27,9 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 360000, // 1hour in seconds
-        sameSite: process.env.NODE_ENV !== 'production' ? 'lax' : 'none',
         secure: process.env.NODE_ENV !== 'production' ? false : true,
-        path: '/',
-        domain:
-          process.env.NODE_ENV !== 'production'
-            ? 'http://localhost:5173'
-            : frontDomain,
         httpOnly: true,
+        domain: backendDomain,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms

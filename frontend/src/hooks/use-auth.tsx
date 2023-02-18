@@ -5,6 +5,7 @@ import {
   getCurrentUser,
   logoutUser,
   setUser,
+  verifyUserAsActive,
 } from "../redux/slices/authSlice";
 import { axiosClient } from "../service/axios/axiosClient";
 
@@ -38,6 +39,8 @@ const useAuth = () => {
 
   const setLoggedUser = (data: AuthSlice) => dispatch(setUser(data));
 
+  const verifyUserState = () => dispatch(verifyUserAsActive);
+
   const doLogout = async () => {
     try {
       await axiosClient.post("/auth/logout").finally(() => {
@@ -48,7 +51,13 @@ const useAuth = () => {
       console.error(error);
     }
   };
-  return { getLoggedUser, isUserAuthed, setLoggedUser, doLogout };
+  return {
+    getLoggedUser,
+    isUserAuthed,
+    verifyUserState,
+    setLoggedUser,
+    doLogout,
+  };
 };
 
 export default useAuth;

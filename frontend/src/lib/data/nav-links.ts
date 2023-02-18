@@ -6,11 +6,7 @@ export type NavLink = {
 
 export const siteNavigation: NavLink[] = [
   {
-    label: "עמוד ראשי",
-    href: "/",
-  },
-  {
-    label: "כל הסיכומים",
+    label: "סיכומים אחרונים",
     href: "/posts",
   },
   {

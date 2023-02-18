@@ -12,6 +12,8 @@ import { parseCodeToMessage } from "../../utils/forms/error-code-parser";
 import SubmitError from "../../components/page-components/forms/submit-error";
 import SuccessRegister from "../../components/page-components/register/success-register";
 
+//! Todo: Password confirmation
+
 const schema = yup
   .object({
     username: yup
@@ -49,6 +51,7 @@ const RegisterPage = () => {
       await axiosClient
         .post("/auth/register", data)
         .finally(() => setLoading(false));
+      resetField("password");
       setSuccess(true);
     } catch (error) {
       setErrorMessage(parseCodeToMessage((error as any).response.status));
@@ -109,7 +112,7 @@ const RegisterPage = () => {
               <Button
                 type="button"
                 className={`text-sm ${
-                  showPass ? "bg-orange-300 hover:bg-orange-400" : ""
+                  showPass ? "bg-purple-400 hover:bg-purple-600" : ""
                 }`}
                 onClick={toggleShowPass}
               >

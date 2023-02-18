@@ -8,6 +8,7 @@ import { RootState } from "../store";
 export type AuthSlice = {
   id: string | null;
   username: string | null;
+  name: string | null;
   email: string | null;
   verified: boolean | null;
   role: string | string[] | null;
@@ -17,6 +18,7 @@ export type AuthSlice = {
 const initialState: AuthSlice = {
   id: null,
   username: null,
+  name: null,
   email: null,
   verified: null,
   role: null,
@@ -29,6 +31,7 @@ const authSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<AuthSlice>) {
       state.username = action.payload.username;
+      state.name = action.payload.name;
       state.email = action.payload.email;
       state.role = action.payload.role;
       state.id = action.payload.id;
@@ -38,15 +41,21 @@ const authSlice = createSlice({
     logoutUser(state) {
       state.username = initialState.username;
       state.email = initialState.email;
+      state.name = initialState.name;
       state.role = initialState.role;
       state.id = initialState.id;
       state.verified = initialState.verified;
       state.isAuthed = false;
     },
+    verifyUserAsActive(state) {
+      if (!state.verified) {
+        state.verified = true;
+      }
+    },
   },
 });
 
-export const { setUser, logoutUser } = authSlice.actions;
+export const { setUser, logoutUser, verifyUserAsActive } = authSlice.actions;
 
 export const getCurrentUser = (state: RootState) => state.currentUser;
 

@@ -2,7 +2,8 @@ enum ErrorCodes {
   NOTFOUND = 404,
 }
 
-const notfoundError = "הקישור אינו תקין או חלק מהקוד המוצפן חסר.";
+const notfoundError =
+  "הקישור ככל הנראה אינו תקין או שהמשתמש שלך הופעל כבר בעבר ואינו נדרש להפעלה נוספת.";
 const unknownError = "שגיאה לא ידועה בעת ביצוע הפעולה.";
 
 function parseVerifyCodeToMessage(code: number): string {

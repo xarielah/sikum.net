@@ -9,6 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { PostModule } from './post/post.module';
 import { TopicController } from './topic/topic.controller';
 import { TopicService } from './topic/topic.service';
+import { NovuService } from './novu/novu.service';
+import { NovuModule } from './novu/novu.module';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { TopicService } from './topic/topic.service';
     AppConfigModule,
     PassportModule.register({ session: true }),
     PostModule,
+    NovuModule,
   ],
   controllers: [AppController, TopicController],
-  providers: [AppService, TopicService],
+  providers: [AppService, TopicService, NovuService],
 })
 export class AppModule {}

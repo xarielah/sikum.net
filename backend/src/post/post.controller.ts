@@ -10,7 +10,6 @@ import {
   Query,
   Session,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { Post as UserPost } from '@prisma/client';
 import { AuthenticatedGuard } from 'src/auth/strategies/local.strategy';
@@ -43,7 +42,7 @@ export class PostController {
 
   @Post()
   async createNewPost(
-    @Body(ValidationPipe) postDto: PostDto,
+    @Body() postDto: PostDto,
     @Session() session: any,
   ): Promise<UserPost> {
     return this.postService.createNewPost(postDto, session.passport.user);
@@ -60,7 +59,7 @@ export class PostController {
   @Put('/:id')
   async updatePostById(
     @Param('id') id: string,
-    @Body(ValidationPipe) postDto: PostDto,
+    @Body() postDto: PostDto,
     @Session() session: any,
   ): Promise<UserPost> {
     return await this.postService.updatePostById(

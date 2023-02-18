@@ -17,14 +17,16 @@ import { JwtService } from '@nestjs/jwt';
 import { AppConfigService } from 'src/config/config.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from '@prisma/client';
+import { NovuService } from 'src/novu/novu.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private prisma: PrismaService,
-    private jwtService: JwtService,
-    private appConfigService: AppConfigService,
+    private readonly userService: UserService,
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly appConfigService: AppConfigService,
+    private readonly novuService: NovuService,
   ) {}
   @UseGuards(LocalAuthGuard)
 
@@ -42,21 +44,33 @@ export class AuthService {
     const hashedPassword = await argon2.hash(registerDto.password);
 
     try {
-      await this.prisma.user.create({
+      const verificationToken = this.jwtService.sign(
+        {
+          username: registerDto.username,
+          email: registerDto.email,
+        },
+        { secret: this.appConfigService.getConfig().session.secret },
+      );
+
+      const user = await this.prisma.user.create({
         data: {
           ...registerDto,
           displayName: registerDto.username.toLowerCase(),
           email: registerDto.email.toLowerCase(),
           password: hashedPassword,
-          verificationToken: this.jwtService.sign(
-            {
-              username: registerDto.username,
-              email: registerDto.email,
-            },
-            { secret: this.appConfigService.getConfig().session.secret },
-          ),
+          verificationToken: verificationToken,
         },
       });
+
+      const novuPayload = {
+        name: user.firstName,
+        email: user.email,
+        id: user.id,
+      };
+      await this.novuService.sendUserVerificationEmail(
+        verificationToken,
+        novuPayload,
+      );
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException();
@@ -66,7 +80,7 @@ export class AuthService {
   /**
    * Handles login logic of a user.
    * @param loginDto Login data
-   * @returns access & refresh token
+   * @returns session payload
    */
   async handleLogin(loginDto: LoginDto): Promise<SessionPayload> {
     const isUserExists = await this.userService.getUser(
@@ -80,8 +94,10 @@ export class AuthService {
     );
 
     if (!comparePasswords) return null;
+
     return {
       username: isUserExists.username,
+      name: isUserExists.firstName,
       email: isUserExists.email,
       role: isUserExists.role,
       verified: isUserExists.verified,
