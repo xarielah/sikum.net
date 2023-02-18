@@ -9,9 +9,7 @@ import { AppConfigService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
-  });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
   const frontDomain = app.get(AppConfigService).getConfig().front.domain;
   const backendDomain = app.get(AppConfigService).getConfig().back.domain;
