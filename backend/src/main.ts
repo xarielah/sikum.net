@@ -19,7 +19,6 @@ async function bootstrap() {
   });
 
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
-  const backendDomain = app.get(AppConfigService).getConfig().back.domain;
   const port = app.get(AppConfigService).getConfig().app.port;
 
   app.setGlobalPrefix('api');
@@ -37,7 +36,6 @@ async function bootstrap() {
         sameSite: 'lax',
         secure: process.env.NODE_ENV !== 'production' ? false : true,
         httpOnly: true,
-        domain: backendDomain,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms
