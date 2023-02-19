@@ -34,7 +34,7 @@ async function bootstrap() {
       cookie: {
         maxAge: 360000, // 1hour in seconds
         sameSite: 'lax',
-        secure: process.env.NODE_ENV !== 'production' ? false : true,
+        // secure: process.env.NODE_ENV !== 'production' ? false : true,
         httpOnly: true,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
