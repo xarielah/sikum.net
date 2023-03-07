@@ -2,7 +2,7 @@ const ForbiddenIcon = () => {
   return (
     <div className="icon icon--order-success svg">
       <svg xmlns="http://www.w3.org/2000/svg" width="154px" height="154px">
-        <g fill="none" stroke="#F44812" stroke-width="2">
+        <g fill="none" stroke="#F44812" strokeWidth="2">
           <circle
             cx="77"
             cy="77"

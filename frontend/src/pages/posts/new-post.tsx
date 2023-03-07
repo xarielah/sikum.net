@@ -3,29 +3,61 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import FormFieldError from "../../components/page-components/forms/form-field-error";
+import GoBackButton from "../../components/page-components/go-back-from-button/go-back-button";
 import DisplayTags from "../../components/page-components/posts/new-post/display-tags";
 import MaxDescChars from "../../components/page-components/posts/new-post/max-desc-chars";
+import SuccessCreation from "../../components/page-components/posts/new-post/success-creation";
 import Button from "../../components/ui-elements/button/button";
 import ClassicInput from "../../components/ui-elements/input/classic-input";
 import ClassicSelect from "../../components/ui-elements/input/classic-select";
 import ClassicTextarea from "../../components/ui-elements/input/classic-textarea";
 import RippleLoading from "../../components/ui-elements/loading/ripple-loading";
+import { SUPPORTED_FORMATS } from "../../lib/data/supported-formats";
 import { axiosClient } from "../../service/axios/axiosClient";
+import { tagIsValid } from "../../utils/forms/new-post-handler";
 
 const schema = yup
   .object({
     title: yup.string().required("שדה כותרת הוא שדה חובה").max(32),
     description: yup.string().max(256).required("שדה תיאור הוא שדה חובה"),
     topicId: yup.string().default(""),
+    // file: yup
+    //   .mixed()
+    //   .required("נדרש לעלות קובץ עם הסיכום")
+    //   .test(
+    //     "fileType",
+    //     `פורמט לא נתמך [${SUPPORTED_FORMATS.map((format) => format.suffix).join(
+    //       ", "
+    //     )}]`,
+    //     (fileType: any) =>
+    //       fileType &&
+    //       fileType[0].type &&
+    //       SUPPORTED_FORMATS.some(
+    //         (supportedFormat) => supportedFormat.mime === fileType[0].type
+    //       )
+    //   ),
   })
   .required();
 
 const NewPost = () => {
   const [tags, setTags] = useState<string[]>([]);
+  const [createdPost, setCreatedPost] = useState<ICreatedPost>({
+    id: "",
+    title: "",
+    topic: { id: "", label: "" },
+  });
   const [tagError, setTagError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [success, setSuccess] = useState<boolean>(false);
   const [topics, setTopics] = useState<ITopic[]>([]);
   const tagInput = useRef<HTMLInputElement>(null);
+
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewPostFields>({ resolver: yupResolver(schema) });
 
   useEffect(() => {
     const getTopics = async () => {
@@ -44,39 +76,15 @@ const NewPost = () => {
 
   const addTag = () => {
     setTagError("");
-    if (tagInput.current) {
-      const tag = tagInput.current.value.trim() ?? "";
-      const regex = new RegExp(/^[a-zA-Z0-9\u0590-\u05FF']+$/);
+    if (!tagInput.current) return;
+    const tag = tagInput.current.value.trim() ?? "";
+    const { errorMessage } = tagIsValid(tag, tags);
 
-      if (!tag) {
-        setTagError("לא ניתן להוסיף תגית ריקה");
-        return;
-      }
+    if (errorMessage) return setTagError(errorMessage);
 
-      if (!regex.test(tag)) {
-        setTagError("תגית צריכה להכיל רק אנגלית, עברית ומספרים");
-        return;
-      }
-
-      if (tags.includes(tag.toLowerCase())) {
-        setTagError("תגית זו כבר קיימת בתגיות שהזנת");
-        return;
-      }
-
-      if (tag.length < 3 || tag.length > 32) {
-        setTagError("תגית צריכה להכיל מינימום 3 אותיות מקסימום 32 אותיות");
-        return;
-      }
-
-      if (tags.length === 10 || tags.length >= 10) {
-        setTagError("ניתן להוסיף עד עשרה תגיות פר סיכום");
-        return;
-      }
-
-      const newTags = [...tags, tag.toLowerCase()];
-      setTags(newTags);
-      tagInput.current.value = ""; // Resets the input value
-    } else return;
+    const newTags = [...tags, tag.toLowerCase()];
+    setTags(newTags);
+    tagInput.current.value = ""; // Resets the input value
   };
 
   const removeTag = (tagToRemove: string) => {
@@ -84,34 +92,51 @@ const NewPost = () => {
     setTags(filteredTags);
   };
 
-  const {
-    register,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<NewPostFields>({ resolver: yupResolver(schema) });
-
   const onsubmit = async (data: NewPostFields) => {
     setLoading(true);
 
-    const postData: NewPostFields = {
-      ...data,
-      tags: tags,
-    };
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key: string) =>
+      formData.append(key, key === "file" ? data[key][0] : data[key])
+    );
+    formData.append("tags", JSON.stringify(tags));
 
     try {
-      await axiosClient
-        .post("/post", postData)
+      const post = await axiosClient
+        .post("/post", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
         .finally(() => setLoading(false));
+
+      const postData = post.data;
+      const postTopic = topics.filter((topic) => topic.id === postData.topicId);
+
+      setCreatedPost({
+        id: postData.id,
+        title: postData.title,
+        topic: postTopic[0],
+      });
+
+      setSuccess(true);
     } catch (error) {
       console.error(error);
     }
   };
-
+  console.log(errors);
   if (loading) return <RippleLoading />;
+  if (success)
+    return (
+      <SuccessCreation
+        title={createdPost.title}
+        id={createdPost.id}
+        topic={createdPost.topic}
+      />
+    );
   else
     return (
       <section className="flex flex-col space-y-6">
+        <GoBackButton />
         <h1 className="font-bold underline text-center text-xl">
           יצירת פוסט סיכום חדש
         </h1>
@@ -121,6 +146,20 @@ const NewPost = () => {
           onSubmit={handleSubmit(onsubmit)}
           className="flex flex-col space-y-6 max-w-2xl mx-auto w-full"
         >
+          <div className="input-control">
+            <ClassicInput
+              type="file"
+              {...register("file")}
+              className="file-input w-full bg-white"
+            />
+            {errors.file?.message ? (
+              <FormFieldError>
+                {errors.file.message as unknown as string}
+              </FormFieldError>
+            ) : (
+              ""
+            )}
+          </div>
           <div className="input-control">
             <label htmlFor="title" className="classic-form-label">
               איך קוראים לסיכום שלכם?
@@ -150,6 +189,11 @@ const NewPost = () => {
                   ))
                 : ""}
             </ClassicSelect>
+            {errors.topicId?.message ? (
+              <FormFieldError>{errors.topicId.message}</FormFieldError>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex flex-col">
             <label htmlFor="description" className="classic-form-label">
@@ -185,7 +229,7 @@ const NewPost = () => {
                 ref={tagInput}
                 onKeyDown={(event: any) => event.keyCode === 13 && addTag()}
               />
-              <Button onClick={addTag} type="button">
+              <Button onClick={addTag} type="button" className="shpitz-left">
                 הוספה
               </Button>
             </div>
@@ -196,23 +240,35 @@ const NewPost = () => {
             removeAll={() => setTags([])}
             removeTag={removeTag}
           />
-          <Button type="submit">יצירת פוסט</Button>
+          <Button type="submit" className="w-max mx-auto shpitz-left">
+            יצירת פוסט
+          </Button>
         </form>
       </section>
     );
 };
 
-interface NewPostFields {
+type NewPostFields = {
   title: string;
   description: string;
   tags?: string[];
   file: any;
   topicId: string;
-}
+  [key: string]: any;
+};
 
 interface ITopic {
   id: string;
   label: string;
+}
+
+interface ICreatedPost {
+  id: string;
+  title: string;
+  topic: {
+    id: string;
+    label: string;
+  };
 }
 
 export default NewPost;

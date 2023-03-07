@@ -1,9 +1,4 @@
-import React, {
-  ChangeEvent,
-  InputHTMLAttributes,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../ui-elements/button/button";
 import ClassicInput from "../ui-elements/input/classic-input";
@@ -25,7 +20,7 @@ const SearchBar = () => {
   };
 
   return (
-    <section className="flex flex-row-reverse justify-center md:justify-start space-x-3 p-4">
+    <section className="flex flex-row-reverse justify-center md:justify-start space-x-3">
       <Button onClick={goSearch}>חיפוש</Button>
       <ClassicInput
         ref={searchRel}

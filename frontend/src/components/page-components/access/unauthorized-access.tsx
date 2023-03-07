@@ -1,31 +1,19 @@
-import { Link } from "react-router-dom";
-import Button from "../../ui-elements/button/button";
+import ForbiddenIcon from "../../ui-elements/svg/status-icons/forbidden-icon";
 
 const UnauthorizedAccess = () => {
   return (
-    <section className="flex items-center justify-between">
-      <article className="bg-red-100 p-8 w-3/4 lg:w-1/2 mx-auto border-2 border-red-200 rounded-md">
-        <h1 className="text-red-900 font-bold text-3xl">
-          אינך מורשה כניסה לאיזור זה
-        </h1>
-        <p className="text-lg">
-          איזור זה הוא למשתמש רשומים ומחוברים בלבד. כדי לראות את העמוד נדרש
-          להירשם ובאם יש ברשותך משתמש, נדרש להתחבר ולאחר מכן לגשת לעמוד זה.
-        </p>
-
-        <div className="flex gap-3 items-center justify-center mt-6">
-          <Link to="/auth/register">
-            <Button className="text-white bg-gray-900 hover:bg-gray-700">
-              הרשמה
-            </Button>
-          </Link>
-          <Link to="/auth/login">
-            <Button className="text-white bg-gray-900 hover:bg-gray-700">
-              התחברות
-            </Button>
-          </Link>
-        </div>
-      </article>
+    <section className="flex flex-col gap-8 p-8">
+      <div className="mx-auto">
+        <ForbiddenIcon />
+      </div>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-5xl font-bold">מצטערים לומר אבל...</h1>
+        <h2 className="text-4xl mr-6">אינך מורשה כניסה לאיזור זה.</h2>
+      </div>
+      <p className="mx-auto text-lg text-slate-600 dark:text-slate-300 max-w-2xl">
+        איזור זה הוא למשתמש רשומים ומחוברים בלבד. כדי לראות את העמוד נדרש להירשם
+        ובאם יש ברשותך משתמש, נדרש להתחבר ולאחר מכן לגשת לעמוד זה.
+      </p>
     </section>
   );
 };

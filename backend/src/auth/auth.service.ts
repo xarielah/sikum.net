@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
@@ -16,7 +14,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AppConfigService } from 'src/config/config.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { User } from '@prisma/client';
 import { NovuService } from 'src/novu/novu.service';
 
 @Injectable()
@@ -54,7 +51,8 @@ export class AuthService {
 
       const user = await this.prisma.user.create({
         data: {
-          ...registerDto,
+          username: registerDto.username,
+          firstName: registerDto.firstName,
           displayName: registerDto.username.toLowerCase(),
           email: registerDto.email.toLowerCase(),
           password: hashedPassword,

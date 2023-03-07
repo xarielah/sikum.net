@@ -2,7 +2,7 @@ import logo from "../../assets/logo.png";
 
 const MainFooter = () => {
   return (
-    <footer className="flex p-8 justify-between flex-col space-y-6 md:space-y-0 md:flex-row items-center bg-gray-800 text-slate-300">
+    <footer className="flex p-8 justify-between flex-col space-y-6 md:space-y-0 md:flex-row items-center dark:text-white text-slate-600">
       <div>
         <ul className="flex gap-4">
           <li>קישור לדוגמה</li>

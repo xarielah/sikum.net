@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import MainFooter from "../footer/main-footer";
+import AuthedMenu from "../header/authed-menu";
 import MainHeader from "../header/main-header";
 
 interface IMainLayoutProps {
@@ -10,7 +11,10 @@ const MainLayout = ({ children }: IMainLayoutProps) => {
   return (
     <>
       <MainHeader />
-      <main className="py-8 app-container md:max-w-[180ch] mx-auto">
+      <main className="py-4 px-6 app-container md:max-w-[100ch] mx-auto">
+        <div className="w-full flex items-center justify-center">
+          <AuthedMenu />
+        </div>
         {children}
       </main>
       <MainFooter />
