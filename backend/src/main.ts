@@ -22,6 +22,7 @@ async function bootstrap() {
   const configService = app.get(AppConfigService).getConfig();
 
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
+  
   const port = configService.app.port;
 
   app.setGlobalPrefix('api');
@@ -36,7 +37,8 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 360000, // 1hour in seconds
-        secure: process.env.NODE_ENV !== 'production' ? false : true,
+        sameSite: 'lax',
+        // secure: process.env.NODE_ENV !== 'production' ? false : true,
         httpOnly: true,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
