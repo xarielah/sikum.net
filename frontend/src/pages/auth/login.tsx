@@ -104,7 +104,7 @@ const LoginPage = () => {
               />
               <Button
                 type="button"
-                className={`text-sm ${
+                className={`text-sm shpitz-right ${
                   showPass ? "bg-orange-300 hover:bg-orange-400" : ""
                 }`}
                 onClick={toggleShowPass}
@@ -118,7 +118,7 @@ const LoginPage = () => {
               ""
             )}
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="shpitz-left">
             התחברות
           </Button>
         </form>

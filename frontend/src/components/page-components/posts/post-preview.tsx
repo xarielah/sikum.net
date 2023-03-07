@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/use-auth";
-import { IPost } from "../../../pages/posts/show-post-page/show-post";
+import { Post } from "../../../lib/types/posts.types";
 
 const PostPreview = ({ post }: IPostPreviewProps) => {
   const { getLoggedUser } = useAuth();
@@ -52,7 +52,7 @@ const PostPreview = ({ post }: IPostPreviewProps) => {
 };
 
 interface IPostPreviewProps {
-  post: IPost;
+  post: Post;
 }
 
 export default PostPreview;

@@ -11,7 +11,7 @@ const Button = (
   return (
     <button
       {...restProps}
-      className={`p-2 bg-cyan-400 shadow-md shadow-cyan-800/20 border-b-[2px] border-b-cyan-600 focus:outline-2 outline-cyan-400 rounded-lg hover:bg-cyan-300 ease-in-out duration-300 ${
+      className={`py-2 dark:text-white hover:border-b-green-400 border-b-4 hover:dark:text-slate-300 px-6 dark:bg-slate-900/70 border-[1px] text-md font-bold text-slate-600 border-slate-400 ease-in-out duration-300 ${
         className ?? ""
       }`}
     >

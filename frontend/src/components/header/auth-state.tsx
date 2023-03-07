@@ -7,33 +7,30 @@ const AuthState = () => {
   const { doLogout } = useAuth();
 
   return (
-    <section className="flex lg:gap-6 gap-2 items-center justify-center flex-col lg:flex-row text-sm mx-auto lg:mx-0">
-      <span className="font-bold text-sm lg:text-lg text-gray-300">
+    <section className="flex gap-3 lg:gap-6 items-center justify-between sm:justify-center mx-0">
+      <span className="font-bold text-gray-300">
         {getLoggedUser.username ? (
           <span>
             שלום,{" "}
-            <span className="text-white">
+            <span className="text-green-400">
               {getLoggedUser.name ?? getLoggedUser.username}
             </span>
           </span>
         ) : (
-          "אתם רשומים?"
+          "מה נשמע?"
         )}
       </span>
       {getLoggedUser.username ? (
-        <Button
-          onClick={doLogout}
-          className="bg-transparent shadow-none text-red-500 font-bold hover:bg-transparent hover:underline"
-        >
+        <Button onClick={doLogout} className="shpitz-right">
           התנתקות
         </Button>
       ) : (
-        <div className="flex gap-3">
-          <Link to={"/auth/register"}>
-            <Button className="bg-gray-200 hover:bg-gray-300">הרשמה</Button>
-          </Link>
+        <div className="flex">
           <Link to={"/auth/login"}>
-            <Button>להתחברות</Button>
+            <Button className="border-l-0 rounded-br-xl">להתחברות</Button>
+          </Link>
+          <Link to={"/auth/register"}>
+            <Button className="rounded-tl-xl">הרשמה</Button>
           </Link>
         </div>
       )}

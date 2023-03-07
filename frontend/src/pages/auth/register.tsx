@@ -25,7 +25,14 @@ const schema = yup
       .required("שדה שם המשתמש הוא חובה.")
       .max(36),
     password: yup.string().required("שדה הסיסמה הוא חובה."),
-    email: yup.string().email().required("שדה המייל הוא חובה."),
+    confirmPassword: yup
+      .string()
+      .required("שדה אישור סיסמה הוא חובה.")
+      .oneOf([yup.ref("password")], "הסיסמאות חייבות להיות זהות."),
+    email: yup
+      .string()
+      .email("פורמט האימייל אינו תקין.")
+      .required("שדה האימייל הוא חובה."),
     firstName: yup.string().required("שדה שם פרטי הוא חובה.").max(36),
   })
   .required();
@@ -101,17 +108,17 @@ const RegisterPage = () => {
           </div>
 
           <div className="flex flex-col w-full max-w-sm gap-1">
-            <label htmlFor="username">סיסמת התחברות:</label>
+            <label htmlFor="username">סיסמה:</label>
             <div className="flex gap-3 items-center justify-center w-full">
               <ClassicInput
                 type={showPass ? "text" : "password"}
-                placeholder="נא להזין סיסמת התחברות..."
+                placeholder="נא להזין סיסמה..."
                 className="w-full"
                 {...register("password")}
               />
               <Button
                 type="button"
-                className={`text-sm ${
+                className={`text-sm shpitz-right ${
                   showPass ? "bg-purple-400 hover:bg-purple-600" : ""
                 }`}
                 onClick={toggleShowPass}
@@ -119,8 +126,24 @@ const RegisterPage = () => {
                 {showPass ? "הסתר" : "הצג"}
               </Button>
             </div>
-            {errors.password && errors.password.message ? (
-              <FormFieldError>{errors.password?.message}</FormFieldError>
+            {errors.password?.message ? (
+              <FormFieldError>{errors.password.message}</FormFieldError>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="flex flex-col w-full max-w-sm gap-1">
+            <label htmlFor="username">אישור סיסמה:</label>
+            <div className="flex gap-3 items-center justify-center w-full">
+              <ClassicInput
+                type={"password"}
+                placeholder="נא לאשר את הסיסמה..."
+                className="w-full"
+                {...register("confirmPassword")}
+              />
+            </div>
+            {errors.confirmPassword && errors.confirmPassword.message ? (
+              <FormFieldError>{errors.confirmPassword?.message}</FormFieldError>
             ) : (
               ""
             )}
@@ -139,8 +162,8 @@ const RegisterPage = () => {
             )}
           </div>
 
-          <Button type="submit" className="w-full">
-            התחברות
+          <Button type="submit" className="shpitz-left">
+            הרשמה
           </Button>
         </form>
       </AuthFormsLayout>
@@ -150,6 +173,7 @@ const RegisterPage = () => {
 interface IRegisterFormFields {
   username: string;
   password: string;
+  confirmPassword: string;
   email: string;
   firstName: string;
   //! institute: string; // institute ID - add later
