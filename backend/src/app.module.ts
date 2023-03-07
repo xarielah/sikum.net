@@ -11,6 +11,7 @@ import { TopicController } from './topic/topic.controller';
 import { TopicService } from './topic/topic.service';
 import { NovuService } from './novu/novu.service';
 import { NovuModule } from './novu/novu.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { NovuModule } from './novu/novu.module';
     PassportModule.register({ session: true }),
     PostModule,
     NovuModule,
+    FirebaseModule,
   ],
   controllers: [AppController, TopicController],
   providers: [AppService, TopicService, NovuService],

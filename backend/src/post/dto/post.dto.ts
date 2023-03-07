@@ -17,6 +17,8 @@ export class PostDto {
   @IsOptional()
   tags: string[];
 
+  file: any;
+
   @IsString()
   topicId: string;
 }

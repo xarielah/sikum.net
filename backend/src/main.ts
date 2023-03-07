@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import * as admin from 'firebase-admin';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import { PrismaClient } from '@prisma/client';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfigService } from './config/config.service';
 import { ValidationPipe } from '@nestjs/common';
+import { ServiceAccount } from 'firebase-admin';
 
 const FRONT_DOMAIN = process.env.FRONT_DOMAIN ?? 'http://localhost:5173';
 
@@ -17,10 +19,10 @@ async function bootstrap() {
       credentials: true,
     },
   });
+  const configService = app.get(AppConfigService).getConfig();
 
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
-  const backendDomain = app.get(AppConfigService).getConfig().back.domain;
-  const port = app.get(AppConfigService).getConfig().app.port;
+  const port = configService.app.port;
 
   app.setGlobalPrefix('api');
 
@@ -36,7 +38,6 @@ async function bootstrap() {
         maxAge: 360000, // 1hour in seconds
         secure: process.env.NODE_ENV !== 'production' ? false : true,
         httpOnly: true,
-        domain: backendDomain,
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, //ms
@@ -45,6 +46,17 @@ async function bootstrap() {
       }),
     }),
   );
+
+  const fbAdminConfig: ServiceAccount = {
+    projectId: configService.firebase.projectId,
+    clientEmail: configService.firebase.clientEmail,
+    privateKey: configService.firebase.privateKey,
+  };
+
+  admin.initializeApp({
+    credential: admin.credential.cert(fbAdminConfig),
+    storageBucket: configService.firebase.storageBucket,
+  });
 
   // app.enableCors({
   //   origin: [frontDomain, `${frontDomain}/`],

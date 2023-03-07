@@ -6,6 +6,10 @@ export class RegisterDto {
   email: string;
 
   @IsString()
+  @MaxLength(16)
+  firstName: string;
+
+  @IsString()
   @MaxLength(32)
   @IsNotEmpty()
   username: string;

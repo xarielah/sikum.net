@@ -20,6 +20,12 @@ export const configFactory: ConfigFactory<{ config: IConfiguration }> = () => {
       back: {
         domain: process.env.BACK_DOMAIN ?? 'http://localhost:3000',
       },
+      firebase: {
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        storageBucket: process.env.FIREBASE_BUCKET,
+      },
     },
   };
 };
@@ -44,10 +50,18 @@ export interface NovuConfig {
   apiKey: string;
 }
 
+export interface FirebaseConfig {
+  projectId: string;
+  privateKey: string;
+  clientEmail: string;
+  storageBucket: string;
+}
+
 export interface IConfiguration {
   app: AppConfig;
   front: FrontConfig;
   back: BackConfig;
   session: SessionConfig;
   novu: NovuConfig;
+  firebase: FirebaseConfig;
 }
