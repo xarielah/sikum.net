@@ -12,6 +12,7 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
+    "types": ["Multer"],
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,

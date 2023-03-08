@@ -14,6 +14,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Post as UserPost } from '@prisma/client';
 import { AuthenticatedGuard } from 'src/auth/strategies/local.strategy';
