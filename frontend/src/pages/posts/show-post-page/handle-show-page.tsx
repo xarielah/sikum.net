@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import RippleLoading from "../../../components/ui-elements/loading/ripple-loading";
 import { axiosClient } from "../../../service/axios/axiosClient";
 import NotFound from "../../404";
-import ShowPost, { IPost } from "./show-post";
+import ShowPost from "./show-post";
+import { Post } from "../../../lib/types/posts.types";
 
 const HandleShowPage = () => {
   const [notfoundError, setNotfoundError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [post, setPost] = useState<IPost>();
+  const [post, setPost] = useState<Post>();
   const params = useParams();
 
   useEffect(() => {
