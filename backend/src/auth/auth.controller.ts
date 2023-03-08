@@ -46,7 +46,7 @@ export class AuthController {
      * record from postgreSQL using prisma integration
      * from main.ts file.
      */
-    req.session.destroy((err: any) => {
+    (req as any).session.destroy((err: any) => {
       if (err) throw new InternalServerErrorException(err);
     });
   }
