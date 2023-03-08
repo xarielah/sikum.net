@@ -14,7 +14,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Multer } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Post as UserPost } from '@prisma/client';
 import { AuthenticatedGuard } from 'src/auth/strategies/local.strategy';
@@ -28,6 +27,7 @@ import {
   PostsByTopic,
 } from './types/post.types';
 import { FirebaseService } from 'src/firebase/firebase.service';
+import 'multer';
 
 @Controller('post')
 export class PostController {
