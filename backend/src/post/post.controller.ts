@@ -15,6 +15,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 import { Post as UserPost } from '@prisma/client';
 import { AuthenticatedGuard } from 'src/auth/strategies/local.strategy';
 import { PostDto } from './dto/post.dto';
