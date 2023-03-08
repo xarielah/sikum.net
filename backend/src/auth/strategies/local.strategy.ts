@@ -34,6 +34,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 export class AuthenticatedGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<any> {
     const req = context.switchToHttp().getRequest<Request>();
-    return req.isAuthenticated();
+    return (req as any).isAuthenticated();
   }
 }
