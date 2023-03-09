@@ -92,7 +92,7 @@ export class PostController {
     @Body() postDto: PostDto,
     @Session() session: any,
     @UploadedFile()
-    file: Express.Multer.File,
+    file: any,
     @Req() req: any,
   ): Promise<any> {
     // if (!file || req.fileError)
