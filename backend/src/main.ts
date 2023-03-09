@@ -22,12 +22,16 @@ async function bootstrap() {
   const configService = app.get(AppConfigService).getConfig();
 
   const sessionSecret = app.get(AppConfigService).getConfig().session.secret;
-  
+
   const port = configService.app.port;
 
   app.setGlobalPrefix('api');
 
   app.useGlobalPipes(new ValidationPipe());
+
+  // if (app.get('env') === 'production') {
+  app.set('trust proxy', 'auto');
+  // }
 
   app.use(
     session({
