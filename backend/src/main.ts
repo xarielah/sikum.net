@@ -30,7 +30,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // if (app.get('env') === 'production') {
-  app.set('trust proxy', 'auto');
+  app.set('trust proxy', 1);
   // }
 
   app.use(
