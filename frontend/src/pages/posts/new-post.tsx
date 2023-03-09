@@ -123,7 +123,7 @@ const NewPost = () => {
       console.error(error);
     }
   };
-  console.log(errors);
+
   if (loading) return <RippleLoading />;
   if (success)
     return (
